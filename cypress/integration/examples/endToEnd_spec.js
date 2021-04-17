@@ -1,10 +1,13 @@
 /// <reference types="Cypress" />
 
 import prop from '../../fixtures/prop.js'
-
+import HomePage from '../../support/pageObjects/HomePage'
+import ProductsPage from '../../support/pageObjects/ProductsPage'
+import CheckoutPage from '../../support/pageObjects/CheckouPage'
 const {
-name,url,gender,productName
+name,url,gender,productName,successMessage,country
 }=prop.value
+
 
 describe("Test suite",function() {
     beforeEach(function () {
@@ -15,19 +18,20 @@ describe("Test suite",function() {
         
     })
 
+    const homepage = new HomePage()
+    const productsPage = new ProductsPage()
+    const checkoutPage = new CheckoutPage()
 it('end to end',function() {
 
-    cy.visit(url)
-    cy.get('input[name="name"]:nth-child(2)').type(name)
-    cy.get("select").select(gender)
-    cy.get(':nth-child(4) > .ng-untouched').should('have.value', name)
-    cy.get('input[name="name"]:nth-child(2)').should('have.attr','minlength','2')
-    cy.get('#inlineRadio3').should('be.disabled')
-    cy.get('[class="btn btn-success"]').click()
-    cy.get('.alert').should('be.visible').contains("Success!")
-    cy.get(':nth-child(2) > .nav-link').click()
-   
-  
+    cy.visit(Cypress.env('url'))
+    homepage.getEditBox().type(name)
+    homepage.getGender().select(gender)
+    homepage.getTwowayDataBinding().should('have.value', name)
+    homepage.getEditBox().should('have.attr','minlength','2')
+    homepage.getEntrepreneaur().should('be.disabled')
+    homepage.getSubmitbutton().click()
+    homepage.getSuccessBanner().should('be.visible').contains(successMessage)
+    homepage.getShopTab().click()
 
 })
 
@@ -40,13 +44,43 @@ it("shopPage", function(){
      cy.selectProduct(element)
     })
 
-        
-       
-    
+   
+    productsPage.CheckoutButton().click()
+    var sum=0
+    cy.get('tr td:nth-child(4) strong').each(($el,index,$list)=>{
 
-    
+      
+        const amount=$el.text()
+        var result = amount.split(' ')
+        result = result[1].trim()
+      
+        sum= Number(sum) + Number(result)
+     //asynchronous- Promise solving JS   
+    }).then(function(){
+        cy.log(sum)
+    })
+    cy.get('h3 strong').then(function(element){
+
+        const amount=element.text()
+        var result = amount.split(' ')
+        var totalAmount= result[1].trim()
+        cy.log(totalAmount)
+        expect(sum).to.equal(Number(totalAmount))
+    })  
 
 })
+
+
+it("CheckoutPage", function(){
+   checkoutPage.getCheckoutButton().click()
+   checkoutPage.getCountryText().type(country)
+   checkoutPage.pickCountry().click()
+   checkoutPage.getCheckbox().click({force:true})
+   checkoutPage.getPurchaseButton().click()
+   checkoutPage.getSuccessBanner().should('be.visible').contains(successMessage)
+
+
  
+})
 })
 

@@ -2,8 +2,10 @@ const prop ={
     value:{
         name:"Alex",
         gender:"Male",
-        url:"https://rahulshettyacademy.com/angularpractice/",
-        productName:["Blackberry","Nokia Edge"]
+        
+        productName:["Blackberry","Nokia Edge"],
+        successMessage: "Success!",
+        country: "Germany"
 
     },
    
