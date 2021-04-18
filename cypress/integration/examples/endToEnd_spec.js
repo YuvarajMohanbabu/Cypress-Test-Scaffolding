@@ -21,7 +21,7 @@ describe("Test suite",function() {
     const homepage = new HomePage()
     const productsPage = new ProductsPage()
     const checkoutPage = new CheckoutPage()
-it('end to end',function() {
+it('Homepage',function() {
 
     cy.visit(Cypress.env('url'))
     homepage.getEditBox().type(name)
