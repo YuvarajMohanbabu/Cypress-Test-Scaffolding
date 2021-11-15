@@ -36,7 +36,7 @@ open package.json file and right click and run on this line
 
 **To run headless:**
 
-    npm run test --headless
+        npm run test --headless
 
 **To Run on Dashboard **
 
